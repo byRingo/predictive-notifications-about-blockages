@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from typing import Dict, Any
@@ -310,3 +310,19 @@ async def new_maintenance_date(pipe_id: int, date: str):
         json.dump(maintenance_data, file, indent=4)
 
     return {"message": f"Maintenance date for object {pipe_id} updated to {date}."}
+
+@app.post("/upload-data")
+async def upload_data(file: UploadFile = File(...)):
+    if file.content_type != 'application/json':
+        raise HTTPException(status_code=400, detail="Invalid file type. Only JSON files are allowed.")
+    
+    try:
+        contents = await file.read()
+        data = json.loads(contents)
+        
+        with open('data.json', 'w') as f:
+            json.dump(data, f)
+        
+        return {"message": "File uploaded successfully"}
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Error decoding JSON data")

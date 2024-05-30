@@ -154,4 +154,69 @@ async def latest_info():
 
     return {
         "percentage_last_day": percentage
-    }   
+    }  
+    
+@app.get("/test_info")
+async def test_info():
+    # Fetch the JSON data from the provided URL
+    try:
+        response = requests.get(DATA_URL)
+        response.raise_for_status()
+        data = response.json()
+    except requests.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching data: {str(e)}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Error decoding JSON data")
+
+    # Process the JSON data into a DataFrame
+    records = []
+    for day, events in data.items():
+        for event_id, event_details in events.items():
+            timestart = event_details['alert']['timestart']
+            timestop = event_details['alert']['timestop']
+            duration = timestop - timestart
+            records.append([int(day), timestart, timestop, duration])
+
+    df = pd.DataFrame(records, columns=['day', 'timestart', 'timestop', 'duration'])
+
+    # Get unique days and ensure there are enough data points
+    unique_days = sorted(df['day'].unique())
+    if len(unique_days) < 80:
+        raise HTTPException(status_code=400, detail="Not enough data for the last 80 days")
+
+    # Get the last 20, 40, 60, and 80 days
+    days_to_check = unique_days[-80:][::20]
+    days_data = df[df['day'].isin(days_to_check)]
+
+    # Calculate the median duration for the selected days
+    median_duration_days = days_data.groupby('day')['duration'].apply(median).to_dict()
+
+    # Load the saved percentage values
+    if os.path.exists(PERCENTAGES_FILE):
+        try:
+            with open(PERCENTAGES_FILE, 'r') as file:
+                percentage_values = json.load(file)
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=400, detail="Error decoding JSON data")
+    else:
+        raise HTTPException(status_code=404, detail="Percentage values not found")
+
+    min_duration = percentage_values["0%"]
+    max_duration = percentage_values["100%"]
+
+    # Calculate percentages for each selected day
+    percentages = {}
+    for day in days_to_check:
+        day_duration = median_duration_days.get(day, None)
+        if day_duration is not None:
+            if max_duration != min_duration:  # Avoid division by zero
+                percentage = ((day_duration - min_duration) / (max_duration - min_duration)) * 100
+            else:
+                percentage = 100  # If all values are the same, consider it 100%
+            # Bound the percentage between 0% and 100%
+            percentage = max(0, min(100, percentage))
+            percentages[int(day)] = percentage  # Convert day to int for JSON serialization
+
+    return {
+        "percentages": percentages
+    }

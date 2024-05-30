@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 from typing import Dict, Any
 import pandas as pd
@@ -10,6 +11,22 @@ import os
 import httpx
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTION"],
+    allow_headers=["*"],
+)
 
 PERCENTAGES_FILE = 'percentages.json'
 DATA_URL = "http://dev-rkld.ru/hackathon/data-three.json"
@@ -221,3 +238,46 @@ async def test_info():
     return {
         "percentages": percentages
     }
+
+
+async def create_new_ticket(token: str, number: int = 1):
+    api_url = f'https://lk-hackaton.ujin.tech/api/v1/tck/bms/tickets/create/?{token}'
+    async with httpx.AsyncClient() as client:
+        response = await client.post(api_url, data={
+            {
+                "title": "Заявка для проведения сантехнического обслуживания",
+                "description": f"Засор общей системы канализации подъезда №{number}",
+                "priority": "high",
+                "class": "default",
+                "status": "new",
+                "initiator.id": None,
+                "types": [
+                    {
+                    "types": 1
+                    }
+                ],
+                "assignees": [
+                    {
+                    "assignees": 1
+                    }
+                ],
+                "contracting_companies": [
+                    {
+                    "id": None
+                    }
+                ],
+                "objects": [
+                    {
+                    "type": "complex"
+                    },
+                    {
+                    "id": number
+                    }
+                ],
+                "planned_start_at": None,
+                "planned_end_at": None,
+                "hide_planned_at_from_resident": None,
+                "extra": None
+            }
+        })
+        return response

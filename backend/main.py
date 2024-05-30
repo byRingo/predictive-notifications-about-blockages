@@ -157,6 +157,15 @@ async def latest_info():
     min_duration = percentage_values["0%"]
     max_duration = percentage_values["100%"]
 
+    flag = True
+    for day in median_values:
+        if day < percentage_values["50%"]:
+            flag = False
+            break
+    
+    if flag:
+        resp = await create_new_ticket('ust-739111-c7b6945a90129919f7811aa2941542ed', 1)
+
     # Calculate the percentage for the last day
     last_day_duration = median_duration_last_three_days[last_three_days[-1]]
 
@@ -171,7 +180,8 @@ async def latest_info():
     print(min_duration, max_duration, last_day_duration)
 
     return {
-        "percentage_last_day": percentage
+        "percentage_last_day": percentage,
+        "ticket_response": resp
     }  
     
 @app.get("/test_info")
@@ -244,40 +254,38 @@ async def create_new_ticket(token: str, number: int = 1):
     api_url = f'https://lk-hackaton.ujin.tech/api/v1/tck/bms/tickets/create/?{token}'
     async with httpx.AsyncClient() as client:
         response = await client.post(api_url, data={
-            {
-                "title": "Заявка для проведения сантехнического обслуживания",
-                "description": f"Засор общей системы канализации подъезда №{number}",
-                "priority": "high",
-                "class": "default",
-                "status": "new",
-                "initiator.id": None,
-                "types": [
-                    {
-                    "types": 1
-                    }
-                ],
-                "assignees": [
-                    {
-                    "assignees": 1
-                    }
-                ],
-                "contracting_companies": [
-                    {
-                    "id": None
-                    }
-                ],
-                "objects": [
-                    {
-                    "type": "complex"
-                    },
-                    {
-                    "id": number
-                    }
-                ],
-                "planned_start_at": None,
-                "planned_end_at": None,
-                "hide_planned_at_from_resident": None,
-                "extra": None
-            }
+            "title": "Заявка для проведения сантехнического обслуживания",
+            "description": "Засор общей системы канализации подъезда №1",
+            "priority": "high",
+            "class": "default",
+            "status": "new",
+            "initiator.id": None,
+            "types": [
+                {
+                "types": 1
+                }
+            ],
+            "assignees": [
+                {
+                "assignees": 1
+                }
+            ],
+            "contracting_companies": [
+                {
+                "id": None
+                }
+            ],
+            "objects": [
+                {
+                "type": "complex"
+                },
+                {
+                "id": number
+                }
+            ],
+            "planned_start_at": None,
+            "planned_end_at": None,
+            "hide_planned_at_from_resident": None,
+            "extra": None
         })
         return response

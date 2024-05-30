@@ -7,7 +7,7 @@ interface PipeCardProps{
 }
 
 export default function PipeCard({label, blockage, }: PipeCardProps){
-    return(<Card>
+    return(<Card $blockage={blockage}>
         <Title>{label}</Title>
         <img src={pipe} alt=""/>
         <Description>Засор: {blockage}</Description>

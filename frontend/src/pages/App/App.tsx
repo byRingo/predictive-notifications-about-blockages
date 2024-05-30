@@ -10,8 +10,8 @@ export default function App() {
     const cardsArray = [{label: "1 подъезд",
         blockage: 12},{label: "2 подъезд",
         blockage: 31},{label: "3 подъезд",
-        blockage: 34},{label: "4 подъезд",
-        blockage: 87}]
+        blockage: 52},{label: "4 подъезд",
+        blockage: 10}]
 
   return (
     <Body>

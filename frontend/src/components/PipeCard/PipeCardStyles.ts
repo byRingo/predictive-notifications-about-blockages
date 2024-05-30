@@ -1,10 +1,12 @@
 import styled from "styled-components";
 
-export const Card = styled.div`
+export const Card = styled.div<{$blockage: number}>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: white;
+    background-color: ${props => props.$blockage > 25 ? "#F6FB96": "#8FE388"};
+    background-color: ${props => props.$blockage > 50 ? "#FFC097": ""};
+    background-color: ${props => props.$blockage > 75 ? "#FC8080": ""};
     height: 18rem;
     padding: 3rem;
     border-radius: 1rem;
@@ -16,6 +18,7 @@ export const Title = styled.span`
 text-align: center;
     font-size: 1.2rem;
     margin-top: -1.5rem;
+    font-weight: 600;
 `
 
 export const Description = styled.span`

@@ -8,18 +8,23 @@ export const Logo = styled.img`
 export const Main = styled.main`
     flex-grow: 1;
     background-color: rgb(240 240 240);
+    display: flex;
+    flex-direction: column;
   `
 
 export const ResidentialComplexSection = styled.section`
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
   `
 
 export const Body = styled.div`
   display: flex;
   flex-direction: column;
-    min-height: 100vh;
+  min-height: 100vh;
   `
 
 export const CardSection = styled.section`
@@ -32,4 +37,7 @@ export const CardSection = styled.section`
 export const HomeAddress = styled.p`
         font-weight: 800;
         font-size: 1.5rem;
+        background-color: white;
+        padding: 1rem;
+    border-radius: 1rem;
     `

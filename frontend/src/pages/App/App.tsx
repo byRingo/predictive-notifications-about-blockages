@@ -1,4 +1,4 @@
-import logo from "../../assets/logo_test.png"
+import logo from "../../assets/logo.png"
 import PipeCard from "../../components/PipeCard/PipeCard.tsx";
 import {Body, CardSection, HomeAddress, Logo, Main, ResidentialComplexSection} from "./AppStyles.ts";
 import Header from "../../components/Header/Header.tsx";

@@ -22,5 +22,14 @@ text-align: center;
 `
 
 export const Description = styled.span`
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+`
+
+export const PipeImg = styled.img`
+    width:140px;
+    margin-left:auto;
+    margin-right:auto
 `

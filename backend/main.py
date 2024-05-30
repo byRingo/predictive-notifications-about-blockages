@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from typing import Dict, Any
 import pandas as pd
 import numpy as np
@@ -6,6 +6,7 @@ import json
 from statistics import median
 from datetime import datetime, timedelta
 import os
+import httpx
 
 app = FastAPI()
 
@@ -86,3 +87,54 @@ async def get_percentages():
         return percentage_values
     else:
         return {"message": "Percentage values not found."}    
+
+
+# @app.post("/create_new_ticket")
+# async def new_ticket(request: Request):
+#     params = request.query_params
+#     api_url = f'https://lk-hackaton.ujin.tech/api/v1/tck/bms/tickets/create/?{params}'
+#     if True:
+#         create_new_ticket(api_url, number=1)
+
+
+async def create_new_ticket(token: str, number: int = 1):
+    api_url = f'https://lk-hackaton.ujin.tech/api/v1/tck/bms/tickets/create/?{token}'
+    async with httpx.AsyncClient() as client:
+        response = await client.post(api_url, data={
+            {
+                "title": "Заявка для проведения сантехнического обслуживания",
+                "description": f"Засор общей системы канализации подъезда №{number}",
+                "priority": "high",
+                "class": "default",
+                "status": "new",
+                "initiator.id": None,
+                "types": [
+                    {
+                    "types": 1
+                    }
+                ],
+                "assignees": [
+                    {
+                    "assignees": 1
+                    }
+                ],
+                "contracting_companies": [
+                    {
+                    "id": None
+                    }
+                ],
+                "objects": [
+                    {
+                    "type": "complex"
+                    },
+                    {
+                    "id": number
+                    }
+                ],
+                "planned_start_at": None,
+                "planned_end_at": None,
+                "hide_planned_at_from_resident": None,
+                "extra": None
+            }
+        })
+        return response

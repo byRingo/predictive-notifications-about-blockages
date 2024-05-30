@@ -1,6 +1,9 @@
 import logo from "../../assets/logo.png"
 import PipeCard from "../../components/PipeCard/PipeCard.tsx";
-import {Body, CardSection, CompanyName, Footer, Header, Logo, Main, ResidentialComplexSection} from "./AppStyles.ts";
+import {Body, CardSection, HomeAddress, Logo, Main, ResidentialComplexSection} from "./AppStyles.ts";
+import Header from "../../components/Header/Header.tsx";
+import {CompanyName} from "../../components/Header/HeaderStyles.ts";
+import Footer from "../../components/Footer/Footer.tsx";
 
 export default function App() {
 
@@ -14,12 +17,11 @@ export default function App() {
     <Body>
       <Header>
           <Logo src={logo} alt={"logo"} />
-          <CompanyName>Company name</CompanyName>
+          <CompanyName>Большой бушизм</CompanyName>
       </Header>
       <Main>
         <ResidentialComplexSection>
-          <p>Адрес дома</p>
-          <p>ул. Сибирская 7, д.2</p>
+          <HomeAddress>ул. Сибирская 7, д.2</HomeAddress>
         </ResidentialComplexSection>
           <CardSection>
               {cardsArray.map(cur => {
@@ -28,7 +30,7 @@ export default function App() {
           </CardSection>
       </Main>
       <Footer>
-        <span>Большой бушизм</span>
+        <span>Предикативные уведомления о протечках/засорах</span>
       </Footer>
     </Body>
   )

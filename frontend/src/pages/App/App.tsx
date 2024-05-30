@@ -1,4 +1,4 @@
-import logo from "../../assets/logo.png"
+import logo from "../../assets/logo_test.png"
 import PipeCard from "../../components/PipeCard/PipeCard.tsx";
 import {Body, CardSection, HomeAddress, Logo, Main, ResidentialComplexSection} from "./AppStyles.ts";
 import Header from "../../components/Header/Header.tsx";
@@ -23,11 +23,11 @@ export default function App() {
         <ResidentialComplexSection>
           <HomeAddress>ул. Сибирская 7, д.2</HomeAddress>
         </ResidentialComplexSection>
-          <CardSection>
-              {cardsArray.map(cur => {
-                  return (<PipeCard label={cur.label} blockage={cur.blockage}></PipeCard>)
-              })}
-          </CardSection>
+        <CardSection>
+          {cardsArray.map(cur => {
+            return (<PipeCard label={cur.label} blockage={cur.blockage}></PipeCard>)
+          })}
+        </CardSection>
       </Main>
       <Footer>
         <span>Предикативные уведомления о протечках/засорах</span>

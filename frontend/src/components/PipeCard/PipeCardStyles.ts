@@ -8,6 +8,7 @@ export const Card = styled.div`
     height: 18rem;
     padding: 3rem;
     border-radius: 1rem;
+    box-shadow: inset -1px -1px #888;
 `
 
 export const Title = styled.span`

@@ -7,6 +7,7 @@ import Footer from "../../components/Footer/Footer.tsx";
 import { useEffect, useState } from "react";
 import { get_json } from "../../api/get_json.ts";
 import { get_data } from "../../api/get_data.ts";
+import maintenanceInfo from "../../../../backend/maintenances.json";
 
 export type TPipe = {
   day: number,
@@ -16,6 +17,7 @@ export type TPipe = {
 export default function App() {
 
   const [matilda, setMatilda] = useState<number[]>([])
+  const [potnayaMatilda, setPotnayaMatilda] = useState<string[]>([])
 
   useEffect(() => {
     async function getData() {
@@ -24,26 +26,34 @@ export default function App() {
       setMatilda(Object.values(data))
     }
     getData();
+    setPotnayaMatilda(Object.values(maintenanceInfo))
   }, [])
 
   return (
     <Body>
       <Header>
         <Logo src={logo} alt={"logo"} />
-        <CompanyName>ЖК Большой бушизм</CompanyName>
+        <CompanyName>Интерфейс УК</CompanyName>
       </Header>
       <Main>
         <ResidentialComplexSection>
-          <HomeAddress>Адрес дома: ул. Сибирская 7, д.2</HomeAddress>
+          <HomeAddress>Адрес дома: ул. Адмирала Хакатонова, 8</HomeAddress>
         </ResidentialComplexSection>
         <CardSection>
           {matilda.map((cur, index) => {
-            return (<PipeCard label={`Подъезд ${index + 1}`} blockage={Math.round(cur)} key={index}></PipeCard>)
+            return (
+              <PipeCard
+                label={`Подъезд ${index + 1}`}
+                blockage={Math.round(cur)}
+                key={index}
+                maintenance_date={potnayaMatilda[index]}>
+              </PipeCard>
+            )
           })}
         </CardSection>
       </Main>
       <Footer>
-        <span>Предикативные уведомления о протечках/засорах</span>
+        <span>ЖК Большой бушизм ©️ 2024</span>
       </Footer>
     </Body>
   )

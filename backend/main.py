@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from typing import Dict, Any
@@ -30,6 +30,7 @@ app.add_middleware(
 
 PERCENTAGES_FILE = 'percentages.json'
 DATA_URL = "http://dev-rkld.ru/hackathon/data-three.json"
+MAINTENANCE_FILE = 'maintenances.json'
 
 @app.get("/")
 async def root():
@@ -289,3 +290,47 @@ async def create_new_ticket(token: str, number: int = 1):
             "extra": None
         })
         return response
+    
+
+@app.get("/new_maintenance_date")
+async def new_maintenance_date(pipe_id: int, date: str):
+    try:
+        # Validate and parse the date
+        datetime.strptime(date, "%d:%m:%y")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Must be DD:MM:YY.")
+    
+    # Load existing maintenance data
+    if os.path.exists(MAINTENANCE_FILE):
+        with open(MAINTENANCE_FILE, 'r') as file:
+            try:
+                maintenance_data = json.load(file)
+            except json.JSONDecodeError:
+                maintenance_data = {}
+    else:
+        maintenance_data = {}
+
+    # Update the maintenance date for the specified object
+    maintenance_data[f"object_{pipe_id}"] = date
+
+    # Save the updated maintenance data back to the file
+    with open(MAINTENANCE_FILE, 'w') as file:
+        json.dump(maintenance_data, file, indent=4)
+
+    return {"message": f"Maintenance date for object {pipe_id} updated to {date}."}
+
+@app.post("/upload-data")
+async def upload_data(file: UploadFile = File(...)):
+    if file.content_type != 'application/json':
+        raise HTTPException(status_code=400, detail="Invalid file type. Only JSON files are allowed.")
+    
+    try:
+        contents = await file.read()
+        data = json.loads(contents)
+        
+        with open('data.json', 'w') as f:
+            json.dump(data, f)
+        
+        return {"message": "File uploaded successfully"}
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Error decoding JSON data")

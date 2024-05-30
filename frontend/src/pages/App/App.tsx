@@ -21,7 +21,7 @@ export default function App() {
       </Header>
       <Main>
         <ResidentialComplexSection>
-          <HomeAddress>ул. Сибирская 7, д.2</HomeAddress>
+          <HomeAddress>Адрес дома: ул. Сибирская 7, д.2</HomeAddress>
         </ResidentialComplexSection>
         <CardSection>
           {cardsArray.map(cur => {

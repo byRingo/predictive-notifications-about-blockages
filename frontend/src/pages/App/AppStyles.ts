@@ -35,7 +35,7 @@ export const CardSection = styled.section`
     `
 
 export const HomeAddress = styled.p`
-        font-weight: 800;
+        font-weight: 700;
         font-size: 1.5rem;
         background-color: white;
         padding: 1rem;

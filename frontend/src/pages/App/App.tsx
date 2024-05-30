@@ -30,7 +30,7 @@ export default function App() {
     <Body>
       <Header>
         <Logo src={logo} alt={"logo"} />
-        <CompanyName>Большой бушизм</CompanyName>
+        <CompanyName>ЖК Большой бушизм</CompanyName>
       </Header>
       <Main>
         <ResidentialComplexSection>

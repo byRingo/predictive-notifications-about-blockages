@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const HeaderSection = styled.div`
     display: flex;
     height: 100px;
-    background-color: #C9C9C9;
+    background-color: white;
     gap: 2rem;
     align-items: center;
   `

@@ -7,7 +7,7 @@ export const Logo = styled.img`
 
 export const Main = styled.main`
     flex-grow: 1;
-    background-color: #EAEAEA;
+    background-color: rgb(240 240 240);
   `
 
 export const ResidentialComplexSection = styled.section`

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from typing import Dict, Any
@@ -179,13 +179,12 @@ async def latest_info():
             break
 
     if flag:
-        resp = create_new_ticket('ust-739111-c7b6945a90129919f7811aa2941542ed')
+        resp = await create_new_ticket('ust-739111-c7b6945a90129919f7811aa2941542ed')
     else:
         resp = "Не получилось создать тикет..."
 
     return {
-        "percentage_last_day": percentage,
-        "ticket_response": resp
+        "percentage_last_day": percentage
     }  
 
 @app.get("/test_info")
@@ -254,53 +253,56 @@ async def test_info():
     }
 
 
-def create_new_ticket(token: str):
-    api_url = f'https://lk-hackaton.ujin.tech/v1/tck/bms/tickets/create/?token={token}'
+async def create_new_ticket(token: str):
+    api_url = f'https://api-uae-test.ujin.tech/api/v1/tck/bms/tickets/create/?token={token}'
 
-    respns = requests.post(api_url, data={
-        "title": "Заявка на сантехническое обслуживание",
-        "description": "Есть вероятность засора канализации, необходимо вызвать сантехническую службу",
-        "priority": "high",
-        "class": "inspection",
-        "status": "new",
-        "initiator.id": 739111,
-        "types": [],
-        "assignees": [],
-        "contracting_companies": [],
-        "objects": [
-            {
-            "type": "building",
-            "id": 47
-            }
-        ],
-        "planned_start_at": "",
-        "planned_end_at": "",
-        "hide_planned_at_from_resident": "",
-        "extra": ""
-    }).json()
-    # async with httpx.AsyncClient() as client:
-        # respns = await client.post(api_url, json={
-        #     "title": "Заявка на сантехническое обслуживание",
-        #     "description": "Есть вероятность засора канализации, необходимо вызвать сантехническую службу",
-        #     "priority": "high",
-        #     "class": "inspection",
-        #     "status": "new",
-        #     "initiator.id": 739111,
-        #     "types": [],
-        #     "assignees": [],
-        #     "contracting_companies": [],
-        #     "objects": [
-        #         {
-        #         "type": "building",
-        #         "id": 47
-        #         }
-        #     ],
-        #     "planned_start_at": None,
-        #     "planned_end_at": None,
-        #     "hide_planned_at_from_resident": None,
-        #     "extra": None
-        # })
-    print(respns.text)
+    # respns = requests.post(api_url, data={
+    #     "title": "Заявка на сантехническое обслуживание",
+    #     "description": "Есть вероятность засора канализации, необходимо вызвать сантехническую службу",
+    #     "priority": "high",
+    #     "class": "inspection",
+    #     "status": "new",
+    #     "initiator.id": 739111,
+    #     "types": [],
+    #     "assignees": [],
+    #     "contracting_companies": [],
+    #     "objects": [
+    #         {
+    #         "type": "building",
+    #         "id": 47
+    #         }
+    #     ],
+    #     "planned_start_at": "",
+    #     "planned_end_at": "",
+    #     "hide_planned_at_from_resident": "",
+    #     "extra": ""
+    # })
+    async with httpx.AsyncClient() as client:
+        respns = await client.post(api_url, json={
+            "title": "Заявка на сантехническое обслуживание",
+            "description": "Есть вероятность засора канализации, необходимо вызвать сантехническую службу",
+            "priority": "high",
+            "class": "inspection",
+            "status": "new",
+            "initiator.id": 739111,
+            "types": [],
+            "assignees": [],
+            "contracting_companies": [],
+            "objects": [
+                {
+                "type": "building",
+                "id": 47
+                }
+            ],
+            "planned_start_at": "",
+            "planned_end_at": "",
+            "hide_planned_at_from_resident": "",
+            "extra": ""
+        })
+
+    respns = respns.json()
+
+    print(respns)
     return respns
 
 

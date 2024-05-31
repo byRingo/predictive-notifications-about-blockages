@@ -9,24 +9,19 @@ import { get_json } from "../../api/get_json.ts";
 import { get_data } from "../../api/get_data.ts";
 import maintenanceInfo from "../../../../backend/maintenances.json";
 
-export type TPipe = {
-  day: number,
-  blockageChance: number
-}
-
 export default function App() {
 
-  const [matilda, setMatilda] = useState<number[]>([])
-  const [potnayaMatilda, setPotnayaMatilda] = useState<string[]>([])
+  const [pipes, setPipes] = useState<number[]>([])
+  const [dates, setDates] = useState<string[]>([])
 
   useEffect(() => {
     async function getData() {
       await get_json();
       const data = await get_data()
-      setMatilda(Object.values(data))
+      setPipes(Object.values(data))
     }
-    getData();
-    setPotnayaMatilda(Object.values(maintenanceInfo))
+    getData().catch((err) => console.log(err));
+    setDates(Object.values(maintenanceInfo))
   }, [])
 
   return (
@@ -40,13 +35,13 @@ export default function App() {
           <HomeAddress>Адрес дома: ул. Адмирала Хакатонова, 8</HomeAddress>
         </ResidentialComplexSection>
         <CardSection>
-          {matilda.map((cur, index) => {
+          {pipes.map((cur, index) => {
             return (
               <PipeCard
                 label={`Подъезд ${index + 1}`}
                 blockage={Math.round(cur)}
                 key={index}
-                maintenance_date={potnayaMatilda[index]}>
+                maintenance_date={dates[index]}>
               </PipeCard>
             )
           })}

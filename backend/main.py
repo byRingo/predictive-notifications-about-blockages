@@ -180,6 +180,7 @@ async def latest_info():
 
     if flag:
         resp = await create_new_ticket('ust-739111-c7b6945a90129919f7811aa2941542ed')
+        await send_message()
     else:
         resp = "Не получилось создать тикет..."
 
@@ -304,6 +305,24 @@ async def create_new_ticket(token: str):
 
     print(respns)
     return respns
+
+
+async def send_message():
+    api_url = f'https://im-uae-test.ujin.tech/sendMessage'
+    async with httpx.AsyncClient() as client:
+        respns = await client.post(api_url, json={
+            "channel_key": "251",
+            "text": "К вам в ближайшее время придет мастер-сантехник, чтобы провести необходимые сантехнические работы. Возможно отключение горячей и холодной воды.",
+            "attachment": {},
+            "is_hidden": False
+            },
+            headers={"Authorization": "Token ust-739111-c7b6945a90129919f7811aa2941542ed"}
+        )
+
+    respns = respns.json()
+
+    return respns
+
 
 
 @app.get("/new_maintenance_date")

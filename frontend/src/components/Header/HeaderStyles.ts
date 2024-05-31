@@ -11,5 +11,6 @@ export const HeaderSection = styled.div`
 
 export const CompanyName = styled.span`
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      color: #207E9F
   `

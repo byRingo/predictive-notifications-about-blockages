@@ -1,3 +1,4 @@
+import random
 from fastapi import FastAPI, File, HTTPException, UploadFile, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import requests
@@ -198,7 +199,7 @@ async def test_info():
     if len(unique_days) < 80:
         raise HTTPException(status_code=400, detail="Not enough data for the last 80 days")
 
-    days_to_check = unique_days[-80:][::20]
+    days_to_check = random.sample(unique_days, 4)
     days_data = df[df['day'].isin(days_to_check)]
 
     median_duration_days = days_data.groupby('day')['duration'].apply(median).to_dict()

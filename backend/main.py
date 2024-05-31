@@ -294,12 +294,6 @@ async def create_new_ticket(token: str, number: int = 1):
 
 @app.get("/new_maintenance_date")
 async def new_maintenance_date(pipe_id: int, date: str):
-    try:
-        # Validate and parse the date
-        datetime.strptime(date, "%d:%m:%y")
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid date format. Must be DD:MM:YY.")
-    
     # Load existing maintenance data
     if os.path.exists(MAINTENANCE_FILE):
         with open(MAINTENANCE_FILE, 'r') as file:

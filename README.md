@@ -2,9 +2,9 @@
 ## Предикативные уведомления о протечках/засорах
 ## 3 место
 
-#Backend: FastAPI, pandas, HTTPX
+# Backend: FastAPI, pandas, HTTPX
 
-#Frontend: React, TypesScript, styled-components, axios, Vite
+# Frontend: React, TypesScript, styled-components, axios, Vite
 
 ![image](https://github.com/byRingo/predictive-notifications-about-blockages/assets/113057834/85294d2f-6c85-4fbe-9bcd-93850afc24fb)
 
